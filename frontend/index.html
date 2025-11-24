@@ -1,0 +1,66 @@
+<!-- frontend/index.html -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Planejamento de Atividades ao Ar Livre</title>
+</head>
+<body>
+  <h1>Planejar atividade</h1>
+
+  <form id="activity-form">
+    <label>
+      Latitude:
+      <input type="number" step="0.000001" id="latitude" required />
+    </label>
+    <br />
+    <label>
+      Longitude:
+      <input type="number" step="0.000001" id="longitude" required />
+    </label>
+    <br />
+    <label>
+      Data:
+      <input type="date" id="date" required />
+    </label>
+    <br />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <pre id="result"></pre>
+
+  <script>
+    const form = document.getElementById("activity-form");
+    const resultEl = document.getElementById("result");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        latitude: parseFloat(document.getElementById("latitude").value),
+        longitude: parseFloat(document.getElementById("longitude").value),
+        date: document.getElementById("date").value,
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/plan-activity", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          resultEl.textContent = "Erro: " + JSON.stringify(errorBody, null, 2);
+          return;
+        }
+
+        const data = await response.json();
+        resultEl.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = "Erro de rede: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
