@@ -29,8 +29,11 @@ As dependências estão listadas em:
 requirements.txt
 
 ## Como rodar o projeto
-1. Clonar o repositório (ou baixar a pasta)
+
+1. Clonar o repositório (ou baixar a pasta raiz).
+
 git clone https://github.com/JoaoSaint/Desafio-Bild
+
 cd Desafio-Bild
 
 2. Criar e ativar o ambiente virtual
@@ -44,17 +47,21 @@ pip install -r requirements.txt
 4. Iniciar o servidor
 uvicorn app.main:app --reload
 
-O servidor ficará disponível em:
-
-http://127.0.0.1:8000
-
 ## Testando a API
+
 Depois de subir o servidor, acesse:
 
 http://127.0.0.1:8000/docs
 
-Lá é possível testar o POST /plan-activity diretamente pelo navegador.
+Lá é possível usar o POST /plan-activity diretamente pelo navegador.
 
+O Serviço também conta com um frontend simples(totalmente opcional) que consome os dados das rotas e da API, e pode ser acessado em http://127.0.0.1:8000/frontend/
+
+Tem como intuito mostrar de forma mais intuitiva e simplificada as funcionalidades do serviço.
+
+Dentro do mesmo pode-se utilizar de um "Modo Formulário" onde o usuário preenche os dados de Latitude, Longitude e Data e o próprio formulário gera um body JSON e envia à API.
+
+Da mesma forma que se pode injetar o body JSON diretamente no "Modo JSON"(equivalente ao que se colocaria na /docs) e receber a mesma saída da API.
 ### Exemplo de requisição
 
 POST /plan-activity
@@ -81,11 +88,3 @@ Exemplo de resposta (pode variar conforme a API externa):
     "Observação de estrelas após o pôr do sol"
   ]
 }
-
-
-## Próximos passos (em pausa)
-
-### Criar uma interface web simples que consuma o POST /plan-activity.
-
-Objetivo: enaltecer o backend e suas funcionalidades, oferecendo uma forma
-rápida e intuitiva de testar o serviço de forma visual.

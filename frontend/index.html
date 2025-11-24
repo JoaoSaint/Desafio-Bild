@@ -1,66 +1,97 @@
-<!-- frontend/index.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <title>Planejamento de Atividades ao Ar Livre</title>
-</head>
-<body>
-  <h1>Planejar atividade</h1>
+  <head>
+    <meta charset="utf-8" />
+    <title>Planejamento de Atividades ao Ar Livre</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Planejamento de Atividades ao Ar Livre</h1>
+    <p>
+      Este frontend consome a API <code>POST /plan-activity</code>. Você pode
+      enviar os dados tanto por um 'formulário' quanto colando o JSON completo.
+    </p>
 
-  <form id="activity-form">
-    <label>
-      Latitude:
-      <input type="number" step="0.000001" id="latitude" required />
-    </label>
-    <br />
-    <label>
-      Longitude:
-      <input type="number" step="0.000001" id="longitude" required />
-    </label>
-    <br />
-    <label>
-      Data:
-      <input type="date" id="date" required />
-    </label>
-    <br />
-    <button type="submit">Enviar</button>
-  </form>
+    <div class="card">
+      <h2>Modo Formulário</h2>
+      <p>Preencha latitude, longitude e data e clique em &quot;Enviar&quot;.</p>
 
-  <pre id="result"></pre>
+      <form id="form-mode">
+        <label>
+          Latitude
+          <input
+            type="number"
+            step="0.000001"
+            id="latitude"
+            placeholder="Ex: 36.72016"
+            required
+          />
+        </label>
 
-  <script>
-    const form = document.getElementById("activity-form");
-    const resultEl = document.getElementById("result");
+        <label>
+          Longitude
+          <input
+            type="number"
+            step="0.000001"
+            id="longitude"
+            placeholder="Ex: -4.42034"
+            required
+          />
+        </label>
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+        <label>
+          Data
+          <input type="date" id="date" required />
+        </label>
 
-      const payload = {
-        latitude: parseFloat(document.getElementById("latitude").value),
-        longitude: parseFloat(document.getElementById("longitude").value),
-        date: document.getElementById("date").value,
-      };
+        <div class="buttons">
+          <button type="submit">Enviar (formulário)</button>
+        </div>
+      </form>
+    </div>
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/plan-activity", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+    <div class="card">
+      <h2>Modo JSON</h2>
+      <p>
+        Cole abaixo o JSON completo que será enviado para
+        <code>/plan-activity</code>.
+      </p>
 
-        if (!response.ok) {
-          const errorBody = await response.json().catch(() => ({}));
-          resultEl.textContent = "Erro: " + JSON.stringify(errorBody, null, 2);
-          return;
-        }
+      <form id="json-mode">
+        <label>
+          Body JSON
+          <textarea id="json-input">
+{
+  "latitude": 36.72016,
+  "longitude": -4.42034,
+  "date": "2021-12-25"
+}</textarea
+          >
+        </label>
 
-        const data = await response.json();
-        resultEl.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        resultEl.textContent = "Erro de rede: " + err.message;
-      }
-    });
-  </script>
-</body>
+        <div class="buttons">
+          <button type="submit">Enviar (JSON bruto)</button>
+        </div>
+
+        <div id="json-parse-error" class="error"></div>
+      </form>
+    </div>
+
+    <div class="card output">
+      <h2>Saída da API</h2>
+      <p>Resposta da API (sucesso ou erro) aparecerá aqui:</p>
+      <pre id="output">// aguardando requisição...</pre>
+      <div id="error-output" class="error"></div>
+    </div>
+
+    <div class="meta">
+      <p>
+        Backend: FastAPI em <code>POST /plan-activity</code> • Documentação
+        técnica em
+        <a href="/docs" target="_blank" rel="noreferrer">/docs</a>
+      </p>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
 </html>
